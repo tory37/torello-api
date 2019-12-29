@@ -3,7 +3,11 @@
 endpoint: https://us1.prisma.sh/tory-hebert-f759bb/torello-api/dev
 
 # Points to the file that contains your datamodel
-datamodel: datamodel.prisma
+datamodel:
+  - user.prisma
+  - board.prisma
+  - column.prisma
+  - task.prisma
 
 # Specifies language & location for the generated Prisma client
 generate:

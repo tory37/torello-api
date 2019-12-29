@@ -1,0 +1,10 @@
+type Column {
+  id: ID! @id
+  title: String!
+  position: Int!
+  createdBy: User! @relation(link:INLINE)
+  createdAt: Int!
+  updatedAt: Int!
+  board: Board!
+  tasks: [Task!]! @relation(onDelete: CASCADE)
+}

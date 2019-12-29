@@ -1,31 +1,75 @@
 type Query {
   info: String!
-  userLinks: [Link!]!
-  feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): Feed!
+  board(id: ID!): Board!
+  boards: [Board!]!
+  # feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): Feed!
 }
 
 type Mutation {
-  post(url: String!, description: String!): Link!
   signup(email: String!, password: String!, name: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
-  vote(linkId: ID!): Vote
+
+  createBoard(title: String!, backgroundColor: String!): Board!
+  updateBoard(id: ID!, title: String, backgroundColor: String): Board!
+  # deleteBoard(id: ID!): ID!
+
+  createColumn(title: String!, position: Int!, boardId: ID!): Column!
+  # updateColumn(title: String, position: Int): Column!
+  # deleteColumn(id: ID!): ID!
+
+  # createTask(
+  #   title: String!
+  #   description: String
+  #   position: Int!
+  #   columnId: ID!
+  # ): Task!
+  # updateTask(
+  #   title: String
+  #   description: String
+  #   position: Int
+  #   columnId: ID
+  # ): Task!
+  # deleteTask(id: ID!): ID!
 }
 
-type Subscription {
-  onLinkCreate: Link
-}
+# type Subscription {
+# #   onCreateBoard: Board!
+# #   onUpdateBoard: Board!
+# #   onDeleteBoard: ID!
 
-type Link {
+# #   onCreateColumn: Column!
+# }
+
+type Board {
   id: ID!
-  description: String!
-  url: String!
-  postedBy: User
-  votes: [Vote!]!
+  title: String!
+  backgroundColor: String!
+  createdBy: User!
+  createdAt: Int!
+  updatedAt: Int!
+  columns: [Column!]!
 }
 
-type Feed {
-  links: [Link!]!
-  count: Int!
+type Column {
+  id: ID!
+  title: String!
+  position: Int!
+  createdBy: User!
+  createdAt: Int!
+  updatedAt: Int!
+  board: Board!
+  tasks: [Task!]!
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  position: Int!
+  createdBy: User!
+  createdAt: Int!
+  updatedAt: Int!
+  column: Column!
 }
 
 type AuthPayload {
@@ -37,13 +81,6 @@ type User {
   id: ID!
   name: String!
   email: String!
-  links: [Link!]!
-}
-
-type Vote {
-  id: ID!
-  link: Link!
-  user: User!
 }
 
 enum LinkOrderByInput {

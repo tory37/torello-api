@@ -1,43 +1,20 @@
 const { getUserId } = require("../utils");
 
-const feed = (parent, args, context, info) => {
-  const where = args.filter
-    ? {
-        OR: [
-          { description_contains: args.filter },
-          { url_contains: args.filter }
-        ]
-      }
-    : {};
-
-  const links = context.prisma.links({
-    where,
-    skip: args.skip,
-    first: args.first,
-    orderBy: args.orderBy
-  });
-
-  const count = await context.prisma
-    .linksConnection({
-      where,
-    }).aggregate().count()
-
-  return {
-    links,
-    count
-  }
+const board = (parent, args, context, info) => {
+  return context.prisma.board({ id: args.id });
 };
 
-const userLinks = (parent, args, context, info) => {
-  const userId = getUserId(context);
+const boards = (parent, args, context, info) => {
+  const boards = context.prisma.boards({
+    where: { createdBy: { id: getUserId(context) } }
+  });
 
-  const user = context.prisma.user({ id: userId });
+  console.log(boards);
 
-  const data = context.prisma.links({ where: { postedBy: user } });
-  return data;
+  return boards;
 };
 
 module.exports = {
-  feed,
-  userLinks
+  board,
+  boards
 };

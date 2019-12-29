@@ -1,0 +1,10 @@
+type Task {
+  id: ID! @id
+  title: String!
+  description: String
+  position: Int!
+  createdBy: User! @relation(link: INLINE)
+  createdAt: Int!
+  updatedAt: Int!
+  column: Column!
+}

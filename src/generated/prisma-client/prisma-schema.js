@@ -3,7 +3,15 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateLink {
+/* GraphQL */ `type AggregateBoard {
+  count: Int!
+}
+
+type AggregateColumn {
+  count: Int!
+}
+
+type AggregateTask {
   count: Int!
 }
 
@@ -11,230 +19,121 @@ type AggregateUser {
   count: Int!
 }
 
-type AggregateVote {
-  count: Int!
-}
-
 type BatchPayload {
   count: Long!
 }
 
-scalar DateTime
-
-type Link {
+type Board {
   id: ID!
-  createdAt: DateTime!
-  description: String!
-  url: String!
-  postedBy: User
-  votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
+  title: String!
+  backgroundColor: String!
+  createdBy: User!
+  createdAt: Int!
+  updatedAt: Int!
+  columns(where: ColumnWhereInput, orderBy: ColumnOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Column!]
 }
 
-type LinkConnection {
+type BoardConnection {
   pageInfo: PageInfo!
-  edges: [LinkEdge]!
-  aggregate: AggregateLink!
+  edges: [BoardEdge]!
+  aggregate: AggregateBoard!
 }
 
-input LinkCreateInput {
+input BoardCreateInput {
   id: ID
-  description: String!
-  url: String!
-  postedBy: UserCreateOneWithoutLinksInput
-  votes: VoteCreateManyWithoutLinkInput
+  title: String!
+  backgroundColor: String!
+  createdBy: UserCreateOneInput!
+  columns: ColumnCreateManyWithoutBoardInput
 }
 
-input LinkCreateManyWithoutPostedByInput {
-  create: [LinkCreateWithoutPostedByInput!]
-  connect: [LinkWhereUniqueInput!]
+input BoardCreateOneWithoutColumnsInput {
+  create: BoardCreateWithoutColumnsInput
+  connect: BoardWhereUniqueInput
 }
 
-input LinkCreateOneWithoutVotesInput {
-  create: LinkCreateWithoutVotesInput
-  connect: LinkWhereUniqueInput
-}
-
-input LinkCreateWithoutPostedByInput {
+input BoardCreateWithoutColumnsInput {
   id: ID
-  description: String!
-  url: String!
-  votes: VoteCreateManyWithoutLinkInput
+  title: String!
+  backgroundColor: String!
+  createdBy: UserCreateOneInput!
 }
 
-input LinkCreateWithoutVotesInput {
-  id: ID
-  description: String!
-  url: String!
-  postedBy: UserCreateOneWithoutLinksInput
-}
-
-type LinkEdge {
-  node: Link!
+type BoardEdge {
+  node: Board!
   cursor: String!
 }
 
-enum LinkOrderByInput {
+enum BoardOrderByInput {
   id_ASC
   id_DESC
+  title_ASC
+  title_DESC
+  backgroundColor_ASC
+  backgroundColor_DESC
   createdAt_ASC
   createdAt_DESC
-  description_ASC
-  description_DESC
-  url_ASC
-  url_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
-type LinkPreviousValues {
+type BoardPreviousValues {
   id: ID!
-  createdAt: DateTime!
-  description: String!
-  url: String!
+  title: String!
+  backgroundColor: String!
+  createdAt: Int!
+  updatedAt: Int!
 }
 
-input LinkScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  description: String
-  description_not: String
-  description_in: [String!]
-  description_not_in: [String!]
-  description_lt: String
-  description_lte: String
-  description_gt: String
-  description_gte: String
-  description_contains: String
-  description_not_contains: String
-  description_starts_with: String
-  description_not_starts_with: String
-  description_ends_with: String
-  description_not_ends_with: String
-  url: String
-  url_not: String
-  url_in: [String!]
-  url_not_in: [String!]
-  url_lt: String
-  url_lte: String
-  url_gt: String
-  url_gte: String
-  url_contains: String
-  url_not_contains: String
-  url_starts_with: String
-  url_not_starts_with: String
-  url_ends_with: String
-  url_not_ends_with: String
-  AND: [LinkScalarWhereInput!]
-  OR: [LinkScalarWhereInput!]
-  NOT: [LinkScalarWhereInput!]
-}
-
-type LinkSubscriptionPayload {
+type BoardSubscriptionPayload {
   mutation: MutationType!
-  node: Link
+  node: Board
   updatedFields: [String!]
-  previousValues: LinkPreviousValues
+  previousValues: BoardPreviousValues
 }
 
-input LinkSubscriptionWhereInput {
+input BoardSubscriptionWhereInput {
   mutation_in: [MutationType!]
   updatedFields_contains: String
   updatedFields_contains_every: [String!]
   updatedFields_contains_some: [String!]
-  node: LinkWhereInput
-  AND: [LinkSubscriptionWhereInput!]
-  OR: [LinkSubscriptionWhereInput!]
-  NOT: [LinkSubscriptionWhereInput!]
+  node: BoardWhereInput
+  AND: [BoardSubscriptionWhereInput!]
+  OR: [BoardSubscriptionWhereInput!]
+  NOT: [BoardSubscriptionWhereInput!]
 }
 
-input LinkUpdateInput {
-  description: String
-  url: String
-  postedBy: UserUpdateOneWithoutLinksInput
-  votes: VoteUpdateManyWithoutLinkInput
+input BoardUpdateInput {
+  title: String
+  backgroundColor: String
+  createdBy: UserUpdateOneRequiredInput
+  columns: ColumnUpdateManyWithoutBoardInput
 }
 
-input LinkUpdateManyDataInput {
-  description: String
-  url: String
+input BoardUpdateManyMutationInput {
+  title: String
+  backgroundColor: String
 }
 
-input LinkUpdateManyMutationInput {
-  description: String
-  url: String
+input BoardUpdateOneRequiredWithoutColumnsInput {
+  create: BoardCreateWithoutColumnsInput
+  update: BoardUpdateWithoutColumnsDataInput
+  upsert: BoardUpsertWithoutColumnsInput
+  connect: BoardWhereUniqueInput
 }
 
-input LinkUpdateManyWithoutPostedByInput {
-  create: [LinkCreateWithoutPostedByInput!]
-  delete: [LinkWhereUniqueInput!]
-  connect: [LinkWhereUniqueInput!]
-  set: [LinkWhereUniqueInput!]
-  disconnect: [LinkWhereUniqueInput!]
-  update: [LinkUpdateWithWhereUniqueWithoutPostedByInput!]
-  upsert: [LinkUpsertWithWhereUniqueWithoutPostedByInput!]
-  deleteMany: [LinkScalarWhereInput!]
-  updateMany: [LinkUpdateManyWithWhereNestedInput!]
+input BoardUpdateWithoutColumnsDataInput {
+  title: String
+  backgroundColor: String
+  createdBy: UserUpdateOneRequiredInput
 }
 
-input LinkUpdateManyWithWhereNestedInput {
-  where: LinkScalarWhereInput!
-  data: LinkUpdateManyDataInput!
+input BoardUpsertWithoutColumnsInput {
+  update: BoardUpdateWithoutColumnsDataInput!
+  create: BoardCreateWithoutColumnsInput!
 }
 
-input LinkUpdateOneRequiredWithoutVotesInput {
-  create: LinkCreateWithoutVotesInput
-  update: LinkUpdateWithoutVotesDataInput
-  upsert: LinkUpsertWithoutVotesInput
-  connect: LinkWhereUniqueInput
-}
-
-input LinkUpdateWithoutPostedByDataInput {
-  description: String
-  url: String
-  votes: VoteUpdateManyWithoutLinkInput
-}
-
-input LinkUpdateWithoutVotesDataInput {
-  description: String
-  url: String
-  postedBy: UserUpdateOneWithoutLinksInput
-}
-
-input LinkUpdateWithWhereUniqueWithoutPostedByInput {
-  where: LinkWhereUniqueInput!
-  data: LinkUpdateWithoutPostedByDataInput!
-}
-
-input LinkUpsertWithoutVotesInput {
-  update: LinkUpdateWithoutVotesDataInput!
-  create: LinkCreateWithoutVotesInput!
-}
-
-input LinkUpsertWithWhereUniqueWithoutPostedByInput {
-  where: LinkWhereUniqueInput!
-  update: LinkUpdateWithoutPostedByDataInput!
-  create: LinkCreateWithoutPostedByInput!
-}
-
-input LinkWhereInput {
+input BoardWhereInput {
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -249,75 +148,383 @@ input LinkWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  description: String
-  description_not: String
-  description_in: [String!]
-  description_not_in: [String!]
-  description_lt: String
-  description_lte: String
-  description_gt: String
-  description_gte: String
-  description_contains: String
-  description_not_contains: String
-  description_starts_with: String
-  description_not_starts_with: String
-  description_ends_with: String
-  description_not_ends_with: String
-  url: String
-  url_not: String
-  url_in: [String!]
-  url_not_in: [String!]
-  url_lt: String
-  url_lte: String
-  url_gt: String
-  url_gte: String
-  url_contains: String
-  url_not_contains: String
-  url_starts_with: String
-  url_not_starts_with: String
-  url_ends_with: String
-  url_not_ends_with: String
-  postedBy: UserWhereInput
-  votes_every: VoteWhereInput
-  votes_some: VoteWhereInput
-  votes_none: VoteWhereInput
-  AND: [LinkWhereInput!]
-  OR: [LinkWhereInput!]
-  NOT: [LinkWhereInput!]
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  backgroundColor: String
+  backgroundColor_not: String
+  backgroundColor_in: [String!]
+  backgroundColor_not_in: [String!]
+  backgroundColor_lt: String
+  backgroundColor_lte: String
+  backgroundColor_gt: String
+  backgroundColor_gte: String
+  backgroundColor_contains: String
+  backgroundColor_not_contains: String
+  backgroundColor_starts_with: String
+  backgroundColor_not_starts_with: String
+  backgroundColor_ends_with: String
+  backgroundColor_not_ends_with: String
+  createdBy: UserWhereInput
+  createdAt: Int
+  createdAt_not: Int
+  createdAt_in: [Int!]
+  createdAt_not_in: [Int!]
+  createdAt_lt: Int
+  createdAt_lte: Int
+  createdAt_gt: Int
+  createdAt_gte: Int
+  updatedAt: Int
+  updatedAt_not: Int
+  updatedAt_in: [Int!]
+  updatedAt_not_in: [Int!]
+  updatedAt_lt: Int
+  updatedAt_lte: Int
+  updatedAt_gt: Int
+  updatedAt_gte: Int
+  columns_every: ColumnWhereInput
+  columns_some: ColumnWhereInput
+  columns_none: ColumnWhereInput
+  AND: [BoardWhereInput!]
+  OR: [BoardWhereInput!]
+  NOT: [BoardWhereInput!]
 }
 
-input LinkWhereUniqueInput {
+input BoardWhereUniqueInput {
+  id: ID
+}
+
+type Column {
+  id: ID!
+  title: String!
+  position: Int!
+  createdBy: User!
+  createdAt: Int!
+  updatedAt: Int!
+  board: Board!
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
+}
+
+type ColumnConnection {
+  pageInfo: PageInfo!
+  edges: [ColumnEdge]!
+  aggregate: AggregateColumn!
+}
+
+input ColumnCreateInput {
+  id: ID
+  title: String!
+  position: Int!
+  createdBy: UserCreateOneInput!
+  board: BoardCreateOneWithoutColumnsInput!
+  tasks: TaskCreateManyWithoutColumnInput
+}
+
+input ColumnCreateManyWithoutBoardInput {
+  create: [ColumnCreateWithoutBoardInput!]
+  connect: [ColumnWhereUniqueInput!]
+}
+
+input ColumnCreateOneWithoutTasksInput {
+  create: ColumnCreateWithoutTasksInput
+  connect: ColumnWhereUniqueInput
+}
+
+input ColumnCreateWithoutBoardInput {
+  id: ID
+  title: String!
+  position: Int!
+  createdBy: UserCreateOneInput!
+  tasks: TaskCreateManyWithoutColumnInput
+}
+
+input ColumnCreateWithoutTasksInput {
+  id: ID
+  title: String!
+  position: Int!
+  createdBy: UserCreateOneInput!
+  board: BoardCreateOneWithoutColumnsInput!
+}
+
+type ColumnEdge {
+  node: Column!
+  cursor: String!
+}
+
+enum ColumnOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  position_ASC
+  position_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ColumnPreviousValues {
+  id: ID!
+  title: String!
+  position: Int!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+input ColumnScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  position: Int
+  position_not: Int
+  position_in: [Int!]
+  position_not_in: [Int!]
+  position_lt: Int
+  position_lte: Int
+  position_gt: Int
+  position_gte: Int
+  createdAt: Int
+  createdAt_not: Int
+  createdAt_in: [Int!]
+  createdAt_not_in: [Int!]
+  createdAt_lt: Int
+  createdAt_lte: Int
+  createdAt_gt: Int
+  createdAt_gte: Int
+  updatedAt: Int
+  updatedAt_not: Int
+  updatedAt_in: [Int!]
+  updatedAt_not_in: [Int!]
+  updatedAt_lt: Int
+  updatedAt_lte: Int
+  updatedAt_gt: Int
+  updatedAt_gte: Int
+  AND: [ColumnScalarWhereInput!]
+  OR: [ColumnScalarWhereInput!]
+  NOT: [ColumnScalarWhereInput!]
+}
+
+type ColumnSubscriptionPayload {
+  mutation: MutationType!
+  node: Column
+  updatedFields: [String!]
+  previousValues: ColumnPreviousValues
+}
+
+input ColumnSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ColumnWhereInput
+  AND: [ColumnSubscriptionWhereInput!]
+  OR: [ColumnSubscriptionWhereInput!]
+  NOT: [ColumnSubscriptionWhereInput!]
+}
+
+input ColumnUpdateInput {
+  title: String
+  position: Int
+  createdBy: UserUpdateOneRequiredInput
+  board: BoardUpdateOneRequiredWithoutColumnsInput
+  tasks: TaskUpdateManyWithoutColumnInput
+}
+
+input ColumnUpdateManyDataInput {
+  title: String
+  position: Int
+}
+
+input ColumnUpdateManyMutationInput {
+  title: String
+  position: Int
+}
+
+input ColumnUpdateManyWithoutBoardInput {
+  create: [ColumnCreateWithoutBoardInput!]
+  delete: [ColumnWhereUniqueInput!]
+  connect: [ColumnWhereUniqueInput!]
+  set: [ColumnWhereUniqueInput!]
+  disconnect: [ColumnWhereUniqueInput!]
+  update: [ColumnUpdateWithWhereUniqueWithoutBoardInput!]
+  upsert: [ColumnUpsertWithWhereUniqueWithoutBoardInput!]
+  deleteMany: [ColumnScalarWhereInput!]
+  updateMany: [ColumnUpdateManyWithWhereNestedInput!]
+}
+
+input ColumnUpdateManyWithWhereNestedInput {
+  where: ColumnScalarWhereInput!
+  data: ColumnUpdateManyDataInput!
+}
+
+input ColumnUpdateOneRequiredWithoutTasksInput {
+  create: ColumnCreateWithoutTasksInput
+  update: ColumnUpdateWithoutTasksDataInput
+  upsert: ColumnUpsertWithoutTasksInput
+  connect: ColumnWhereUniqueInput
+}
+
+input ColumnUpdateWithoutBoardDataInput {
+  title: String
+  position: Int
+  createdBy: UserUpdateOneRequiredInput
+  tasks: TaskUpdateManyWithoutColumnInput
+}
+
+input ColumnUpdateWithoutTasksDataInput {
+  title: String
+  position: Int
+  createdBy: UserUpdateOneRequiredInput
+  board: BoardUpdateOneRequiredWithoutColumnsInput
+}
+
+input ColumnUpdateWithWhereUniqueWithoutBoardInput {
+  where: ColumnWhereUniqueInput!
+  data: ColumnUpdateWithoutBoardDataInput!
+}
+
+input ColumnUpsertWithoutTasksInput {
+  update: ColumnUpdateWithoutTasksDataInput!
+  create: ColumnCreateWithoutTasksInput!
+}
+
+input ColumnUpsertWithWhereUniqueWithoutBoardInput {
+  where: ColumnWhereUniqueInput!
+  update: ColumnUpdateWithoutBoardDataInput!
+  create: ColumnCreateWithoutBoardInput!
+}
+
+input ColumnWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  position: Int
+  position_not: Int
+  position_in: [Int!]
+  position_not_in: [Int!]
+  position_lt: Int
+  position_lte: Int
+  position_gt: Int
+  position_gte: Int
+  createdBy: UserWhereInput
+  createdAt: Int
+  createdAt_not: Int
+  createdAt_in: [Int!]
+  createdAt_not_in: [Int!]
+  createdAt_lt: Int
+  createdAt_lte: Int
+  createdAt_gt: Int
+  createdAt_gte: Int
+  updatedAt: Int
+  updatedAt_not: Int
+  updatedAt_in: [Int!]
+  updatedAt_not_in: [Int!]
+  updatedAt_lt: Int
+  updatedAt_lte: Int
+  updatedAt_gt: Int
+  updatedAt_gte: Int
+  board: BoardWhereInput
+  tasks_every: TaskWhereInput
+  tasks_some: TaskWhereInput
+  tasks_none: TaskWhereInput
+  AND: [ColumnWhereInput!]
+  OR: [ColumnWhereInput!]
+  NOT: [ColumnWhereInput!]
+}
+
+input ColumnWhereUniqueInput {
   id: ID
 }
 
 scalar Long
 
 type Mutation {
-  createLink(data: LinkCreateInput!): Link!
-  updateLink(data: LinkUpdateInput!, where: LinkWhereUniqueInput!): Link
-  updateManyLinks(data: LinkUpdateManyMutationInput!, where: LinkWhereInput): BatchPayload!
-  upsertLink(where: LinkWhereUniqueInput!, create: LinkCreateInput!, update: LinkUpdateInput!): Link!
-  deleteLink(where: LinkWhereUniqueInput!): Link
-  deleteManyLinks(where: LinkWhereInput): BatchPayload!
+  createBoard(data: BoardCreateInput!): Board!
+  updateBoard(data: BoardUpdateInput!, where: BoardWhereUniqueInput!): Board
+  updateManyBoards(data: BoardUpdateManyMutationInput!, where: BoardWhereInput): BatchPayload!
+  upsertBoard(where: BoardWhereUniqueInput!, create: BoardCreateInput!, update: BoardUpdateInput!): Board!
+  deleteBoard(where: BoardWhereUniqueInput!): Board
+  deleteManyBoards(where: BoardWhereInput): BatchPayload!
+  createColumn(data: ColumnCreateInput!): Column!
+  updateColumn(data: ColumnUpdateInput!, where: ColumnWhereUniqueInput!): Column
+  updateManyColumns(data: ColumnUpdateManyMutationInput!, where: ColumnWhereInput): BatchPayload!
+  upsertColumn(where: ColumnWhereUniqueInput!, create: ColumnCreateInput!, update: ColumnUpdateInput!): Column!
+  deleteColumn(where: ColumnWhereUniqueInput!): Column
+  deleteManyColumns(where: ColumnWhereInput): BatchPayload!
+  createTask(data: TaskCreateInput!): Task!
+  updateTask(data: TaskUpdateInput!, where: TaskWhereUniqueInput!): Task
+  updateManyTasks(data: TaskUpdateManyMutationInput!, where: TaskWhereInput): BatchPayload!
+  upsertTask(where: TaskWhereUniqueInput!, create: TaskCreateInput!, update: TaskUpdateInput!): Task!
+  deleteTask(where: TaskWhereUniqueInput!): Task
+  deleteManyTasks(where: TaskWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  createVote(data: VoteCreateInput!): Vote!
-  updateVote(data: VoteUpdateInput!, where: VoteWhereUniqueInput!): Vote
-  upsertVote(where: VoteWhereUniqueInput!, create: VoteCreateInput!, update: VoteUpdateInput!): Vote!
-  deleteVote(where: VoteWhereUniqueInput!): Vote
-  deleteManyVotes(where: VoteWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -338,22 +545,317 @@ type PageInfo {
 }
 
 type Query {
-  link(where: LinkWhereUniqueInput!): Link
-  links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
-  linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
+  board(where: BoardWhereUniqueInput!): Board
+  boards(where: BoardWhereInput, orderBy: BoardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Board]!
+  boardsConnection(where: BoardWhereInput, orderBy: BoardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BoardConnection!
+  column(where: ColumnWhereUniqueInput!): Column
+  columns(where: ColumnWhereInput, orderBy: ColumnOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Column]!
+  columnsConnection(where: ColumnWhereInput, orderBy: ColumnOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ColumnConnection!
+  task(where: TaskWhereUniqueInput!): Task
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task]!
+  tasksConnection(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  vote(where: VoteWhereUniqueInput!): Vote
-  votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote]!
-  votesConnection(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
   node(id: ID!): Node
 }
 
 type Subscription {
-  link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
+  board(where: BoardSubscriptionWhereInput): BoardSubscriptionPayload
+  column(where: ColumnSubscriptionWhereInput): ColumnSubscriptionPayload
+  task(where: TaskSubscriptionWhereInput): TaskSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  vote(where: VoteSubscriptionWhereInput): VoteSubscriptionPayload
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  position: Int!
+  createdBy: User!
+  createdAt: Int!
+  updatedAt: Int!
+  column: Column!
+}
+
+type TaskConnection {
+  pageInfo: PageInfo!
+  edges: [TaskEdge]!
+  aggregate: AggregateTask!
+}
+
+input TaskCreateInput {
+  id: ID
+  title: String!
+  description: String
+  position: Int!
+  createdBy: UserCreateOneInput!
+  column: ColumnCreateOneWithoutTasksInput!
+}
+
+input TaskCreateManyWithoutColumnInput {
+  create: [TaskCreateWithoutColumnInput!]
+  connect: [TaskWhereUniqueInput!]
+}
+
+input TaskCreateWithoutColumnInput {
+  id: ID
+  title: String!
+  description: String
+  position: Int!
+  createdBy: UserCreateOneInput!
+}
+
+type TaskEdge {
+  node: Task!
+  cursor: String!
+}
+
+enum TaskOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  description_ASC
+  description_DESC
+  position_ASC
+  position_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type TaskPreviousValues {
+  id: ID!
+  title: String!
+  description: String
+  position: Int!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+input TaskScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  position: Int
+  position_not: Int
+  position_in: [Int!]
+  position_not_in: [Int!]
+  position_lt: Int
+  position_lte: Int
+  position_gt: Int
+  position_gte: Int
+  createdAt: Int
+  createdAt_not: Int
+  createdAt_in: [Int!]
+  createdAt_not_in: [Int!]
+  createdAt_lt: Int
+  createdAt_lte: Int
+  createdAt_gt: Int
+  createdAt_gte: Int
+  updatedAt: Int
+  updatedAt_not: Int
+  updatedAt_in: [Int!]
+  updatedAt_not_in: [Int!]
+  updatedAt_lt: Int
+  updatedAt_lte: Int
+  updatedAt_gt: Int
+  updatedAt_gte: Int
+  AND: [TaskScalarWhereInput!]
+  OR: [TaskScalarWhereInput!]
+  NOT: [TaskScalarWhereInput!]
+}
+
+type TaskSubscriptionPayload {
+  mutation: MutationType!
+  node: Task
+  updatedFields: [String!]
+  previousValues: TaskPreviousValues
+}
+
+input TaskSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TaskWhereInput
+  AND: [TaskSubscriptionWhereInput!]
+  OR: [TaskSubscriptionWhereInput!]
+  NOT: [TaskSubscriptionWhereInput!]
+}
+
+input TaskUpdateInput {
+  title: String
+  description: String
+  position: Int
+  createdBy: UserUpdateOneRequiredInput
+  column: ColumnUpdateOneRequiredWithoutTasksInput
+}
+
+input TaskUpdateManyDataInput {
+  title: String
+  description: String
+  position: Int
+}
+
+input TaskUpdateManyMutationInput {
+  title: String
+  description: String
+  position: Int
+}
+
+input TaskUpdateManyWithoutColumnInput {
+  create: [TaskCreateWithoutColumnInput!]
+  delete: [TaskWhereUniqueInput!]
+  connect: [TaskWhereUniqueInput!]
+  set: [TaskWhereUniqueInput!]
+  disconnect: [TaskWhereUniqueInput!]
+  update: [TaskUpdateWithWhereUniqueWithoutColumnInput!]
+  upsert: [TaskUpsertWithWhereUniqueWithoutColumnInput!]
+  deleteMany: [TaskScalarWhereInput!]
+  updateMany: [TaskUpdateManyWithWhereNestedInput!]
+}
+
+input TaskUpdateManyWithWhereNestedInput {
+  where: TaskScalarWhereInput!
+  data: TaskUpdateManyDataInput!
+}
+
+input TaskUpdateWithoutColumnDataInput {
+  title: String
+  description: String
+  position: Int
+  createdBy: UserUpdateOneRequiredInput
+}
+
+input TaskUpdateWithWhereUniqueWithoutColumnInput {
+  where: TaskWhereUniqueInput!
+  data: TaskUpdateWithoutColumnDataInput!
+}
+
+input TaskUpsertWithWhereUniqueWithoutColumnInput {
+  where: TaskWhereUniqueInput!
+  update: TaskUpdateWithoutColumnDataInput!
+  create: TaskCreateWithoutColumnInput!
+}
+
+input TaskWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  position: Int
+  position_not: Int
+  position_in: [Int!]
+  position_not_in: [Int!]
+  position_lt: Int
+  position_lte: Int
+  position_gt: Int
+  position_gte: Int
+  createdBy: UserWhereInput
+  createdAt: Int
+  createdAt_not: Int
+  createdAt_in: [Int!]
+  createdAt_not_in: [Int!]
+  createdAt_lt: Int
+  createdAt_lte: Int
+  createdAt_gt: Int
+  createdAt_gte: Int
+  updatedAt: Int
+  updatedAt_not: Int
+  updatedAt_in: [Int!]
+  updatedAt_not_in: [Int!]
+  updatedAt_lt: Int
+  updatedAt_lte: Int
+  updatedAt_gt: Int
+  updatedAt_gte: Int
+  column: ColumnWhereInput
+  AND: [TaskWhereInput!]
+  OR: [TaskWhereInput!]
+  NOT: [TaskWhereInput!]
+}
+
+input TaskWhereUniqueInput {
+  id: ID
 }
 
 type User {
@@ -361,7 +863,6 @@ type User {
   name: String!
   email: String!
   password: String!
-  links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
 }
 
 type UserConnection {
@@ -375,24 +876,11 @@ input UserCreateInput {
   name: String!
   email: String!
   password: String!
-  links: LinkCreateManyWithoutPostedByInput
 }
 
 input UserCreateOneInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
-}
-
-input UserCreateOneWithoutLinksInput {
-  create: UserCreateWithoutLinksInput
-  connect: UserWhereUniqueInput
-}
-
-input UserCreateWithoutLinksInput {
-  id: ID
-  name: String!
-  email: String!
-  password: String!
 }
 
 type UserEdge {
@@ -440,14 +928,12 @@ input UserUpdateDataInput {
   name: String
   email: String
   password: String
-  links: LinkUpdateManyWithoutPostedByInput
 }
 
 input UserUpdateInput {
   name: String
   email: String
   password: String
-  links: LinkUpdateManyWithoutPostedByInput
 }
 
 input UserUpdateManyMutationInput {
@@ -463,29 +949,9 @@ input UserUpdateOneRequiredInput {
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateOneWithoutLinksInput {
-  create: UserCreateWithoutLinksInput
-  update: UserUpdateWithoutLinksDataInput
-  upsert: UserUpsertWithoutLinksInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: UserWhereUniqueInput
-}
-
-input UserUpdateWithoutLinksDataInput {
-  name: String
-  email: String
-  password: String
-}
-
 input UserUpsertNestedInput {
   update: UserUpdateDataInput!
   create: UserCreateInput!
-}
-
-input UserUpsertWithoutLinksInput {
-  update: UserUpdateWithoutLinksDataInput!
-  create: UserCreateWithoutLinksInput!
 }
 
 input UserWhereInput {
@@ -545,9 +1011,6 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
-  links_every: LinkWhereInput
-  links_some: LinkWhereInput
-  links_none: LinkWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
@@ -556,143 +1019,6 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   email: String
-}
-
-type Vote {
-  id: ID!
-  link: Link!
-  user: User!
-}
-
-type VoteConnection {
-  pageInfo: PageInfo!
-  edges: [VoteEdge]!
-  aggregate: AggregateVote!
-}
-
-input VoteCreateInput {
-  id: ID
-  link: LinkCreateOneWithoutVotesInput!
-  user: UserCreateOneInput!
-}
-
-input VoteCreateManyWithoutLinkInput {
-  create: [VoteCreateWithoutLinkInput!]
-  connect: [VoteWhereUniqueInput!]
-}
-
-input VoteCreateWithoutLinkInput {
-  id: ID
-  user: UserCreateOneInput!
-}
-
-type VoteEdge {
-  node: Vote!
-  cursor: String!
-}
-
-enum VoteOrderByInput {
-  id_ASC
-  id_DESC
-}
-
-type VotePreviousValues {
-  id: ID!
-}
-
-input VoteScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  AND: [VoteScalarWhereInput!]
-  OR: [VoteScalarWhereInput!]
-  NOT: [VoteScalarWhereInput!]
-}
-
-type VoteSubscriptionPayload {
-  mutation: MutationType!
-  node: Vote
-  updatedFields: [String!]
-  previousValues: VotePreviousValues
-}
-
-input VoteSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: VoteWhereInput
-  AND: [VoteSubscriptionWhereInput!]
-  OR: [VoteSubscriptionWhereInput!]
-  NOT: [VoteSubscriptionWhereInput!]
-}
-
-input VoteUpdateInput {
-  link: LinkUpdateOneRequiredWithoutVotesInput
-  user: UserUpdateOneRequiredInput
-}
-
-input VoteUpdateManyWithoutLinkInput {
-  create: [VoteCreateWithoutLinkInput!]
-  delete: [VoteWhereUniqueInput!]
-  connect: [VoteWhereUniqueInput!]
-  set: [VoteWhereUniqueInput!]
-  disconnect: [VoteWhereUniqueInput!]
-  update: [VoteUpdateWithWhereUniqueWithoutLinkInput!]
-  upsert: [VoteUpsertWithWhereUniqueWithoutLinkInput!]
-  deleteMany: [VoteScalarWhereInput!]
-}
-
-input VoteUpdateWithoutLinkDataInput {
-  user: UserUpdateOneRequiredInput
-}
-
-input VoteUpdateWithWhereUniqueWithoutLinkInput {
-  where: VoteWhereUniqueInput!
-  data: VoteUpdateWithoutLinkDataInput!
-}
-
-input VoteUpsertWithWhereUniqueWithoutLinkInput {
-  where: VoteWhereUniqueInput!
-  update: VoteUpdateWithoutLinkDataInput!
-  create: VoteCreateWithoutLinkInput!
-}
-
-input VoteWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  link: LinkWhereInput
-  user: UserWhereInput
-  AND: [VoteWhereInput!]
-  OR: [VoteWhereInput!]
-  NOT: [VoteWhereInput!]
-}
-
-input VoteWhereUniqueInput {
-  id: ID
 }
 `
       }

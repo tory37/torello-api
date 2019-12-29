@@ -1,0 +1,9 @@
+type Board {
+  id: ID! @id
+  title: String!
+  backgroundColor: String!
+  createdBy: User! @relation(link: INLINE)
+  createdAt: Int!
+  updatedAt: Int!
+  columns: [Column!]! @relation(onDelete: CASCADE)
+}
