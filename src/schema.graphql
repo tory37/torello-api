@@ -15,7 +15,7 @@ type Mutation {
   # deleteBoard(id: ID!): ID!
 
   createColumn(title: String!, position: Int!, boardId: ID!): Column!
-  # updateColumn(title: String, position: Int): Column!
+  updateColumn(id: ID!, title: String, position: Int): Column!
   # deleteColumn(id: ID!): ID!
 
   # createTask(

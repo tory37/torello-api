@@ -72,10 +72,25 @@ const createColumn = (parent, args, context, info) => {
   });
 };
 
+const updateColumn = (parent, args, context) => {
+  const id = args.id;
+  delete args.id;
+  return context.prisma.updateColumn({
+    where: {
+      id
+    },
+    data: {
+      ...args,
+      updatedAt: getTimestamp()
+    }
+  });
+};
+
 module.exports = {
   signup,
   login,
   createBoard,
   updateBoard,
-  createColumn
+  createColumn,
+  updateColumn
 };
