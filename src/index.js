@@ -1,3 +1,7 @@
+"use strict";
+
+require("dotenv").config();
+
 const { GraphQLServer } = require("graphql-yoga");
 const { prisma } = require("./generated/prisma-client");
 
@@ -7,8 +11,9 @@ const Mutation = require("./resolvers/Mutation");
 // const User = require("./resolvers/User");
 const Board = require("./resolvers/Board");
 const Column = require("./resolvers/Column");
+const Task = require("./resolvers/Task");
 
-const resolvers = { Query, Mutation, Board, Column };
+const resolvers = { Query, Mutation, Board, Column, Task };
 
 const server = new GraphQLServer({
   typeDefs: "./src/schema.graphql",
@@ -21,4 +26,6 @@ const server = new GraphQLServer({
   }
 });
 
-server.start(() => console.log(`Server is running on http://localhost:4000`));
+server.start(() => {
+  console.log(`Server is running on http://localhost:4000`);
+});

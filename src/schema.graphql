@@ -18,18 +18,13 @@ type Mutation {
   updateColumn(id: ID!, title: String, position: Int): Column!
   # deleteColumn(id: ID!): ID!
 
-  # createTask(
-  #   title: String!
-  #   description: String
-  #   position: Int!
-  #   columnId: ID!
-  # ): Task!
-  # updateTask(
-  #   title: String
-  #   description: String
-  #   position: Int
-  #   columnId: ID
-  # ): Task!
+  createTask(
+    title: String!
+    description: String
+    position: Int!
+    columnId: ID!
+  ): Task!
+  updateTask(title: String, description: String, position: Int, id: ID!): Task!
   # deleteTask(id: ID!): ID!
 }
 

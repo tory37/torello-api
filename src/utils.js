@@ -1,12 +1,11 @@
 const jwt = require("jsonwebtoken");
-const APP_SECRET = "pokaya-37-kwah";
 const moment = require("moment");
 
 const getUserId = context => {
   const Authorization = context.request.get("Authorization");
   if (context && Authorization) {
     const token = Authorization.replace("Bearer ", "");
-    const { userId } = jwt.verify(token, APP_SECRET);
+    const { userId } = jwt.verify(token, process.env.APP_SECRET);
     return userId;
   }
 
@@ -22,7 +21,6 @@ const getTimestamp = () => {
 };
 
 module.exports = {
-  APP_SECRET,
   getUserId,
   getUser,
   getTimestamp

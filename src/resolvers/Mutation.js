@@ -1,11 +1,11 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { APP_SECRET, getUserId, getTimestamp } = require("../utils");
+const { getUserId, getTimestamp } = require("../utils");
 
 const signup = async (parent, args, context, info) => {
   const password = await bcrypt.hash(args.password, 10);
   const user = await context.prisma.createUser({ ...args, password });
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
+  const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
 
   return {
     token,
@@ -14,7 +14,6 @@ const signup = async (parent, args, context, info) => {
 };
 
 const login = async (parent, args, context, info) => {
-  console.log("loggin in");
   const user = await context.prisma.user({ email: args.email });
   if (!user) {
     throw new Error("No such user found");
@@ -25,9 +24,7 @@ const login = async (parent, args, context, info) => {
     throw new Error("Invalid password");
   }
 
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
-
-  console.log(token);
+  const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
 
   return {
     token,
@@ -86,11 +83,41 @@ const updateColumn = (parent, args, context) => {
   });
 };
 
+const createTask = (parent, args, context) => {
+  const userId = getUserId(context);
+  const { columnId } = args;
+  delete args.columnId;
+
+  return context.prisma.createTask({
+    ...args,
+    column: { connect: { id: columnId } },
+    createdBy: { connect: { id: userId } },
+    createdAt: getTimestamp(),
+    updatedAt: getTimestamp()
+  });
+};
+
+const updateTask = (parent, args, context) => {
+  const id = args.id;
+  delete args.id;
+  return context.prisma.updateTask({
+    where: {
+      id
+    },
+    data: {
+      ...args,
+      updatedAt: getTimestamp()
+    }
+  });
+};
+
 module.exports = {
   signup,
   login,
   createBoard,
   updateBoard,
   createColumn,
-  updateColumn
+  updateColumn,
+  createTask,
+  updateTask
 };
