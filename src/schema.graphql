@@ -2,6 +2,7 @@ type Query {
   info: String!
   board(id: ID!): Board!
   boards: [Board!]!
+  columns: [Column!]!
   # feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): Feed!
 }
 
@@ -48,6 +49,8 @@ type Board {
   createdAt: Int!
   updatedAt: Int!
   columns: [Column!]!
+  columnCount: Int!
+  taskCount: Int!
 }
 
 type Column {

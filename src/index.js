@@ -6,8 +6,9 @@ const Mutation = require("./resolvers/Mutation");
 // const Subscription = require("./resolvers/Subscription");
 // const User = require("./resolvers/User");
 const Board = require("./resolvers/Board");
+const Column = require("./resolvers/Column");
 
-const resolvers = { Query, Mutation, Board };
+const resolvers = { Query, Mutation, Board, Column };
 
 const server = new GraphQLServer({
   typeDefs: "./src/schema.graphql",

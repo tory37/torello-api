@@ -14,7 +14,18 @@ const boards = (parent, args, context, info) => {
   return boards;
 };
 
+const columns = (parent, args, context, info) => {
+  const columns = context.prisma.columns({
+    where: { createdBy: { id: getUserId(context) } }
+  });
+
+  console.log(columns);
+
+  return columns;
+};
+
 module.exports = {
   board,
-  boards
+  boards,
+  columns
 };
