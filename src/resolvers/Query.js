@@ -9,8 +9,6 @@ const boards = (parent, args, context, info) => {
     where: { createdBy: { id: getUserId(context) } }
   });
 
-  console.log(boards);
-
   return boards;
 };
 
@@ -18,8 +16,6 @@ const columns = (parent, args, context, info) => {
   const columns = context.prisma.columns({
     where: { createdBy: { id: getUserId(context) } }
   });
-
-  console.log(columns);
 
   return columns;
 };

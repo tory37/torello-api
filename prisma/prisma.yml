@@ -4,12 +4,14 @@ endpoint: https://us1.prisma.sh/tory-hebert-f759bb/torello-api/dev
 
 # Points to the file that contains your datamodel
 datamodel:
-  - user.prisma
-  - board.prisma
-  - column.prisma
-  - task.prisma
+  - user.graphql
+  - board.graphql
+  - column.graphql
+  - task.graphql
 
 # Specifies language & location for the generated Prisma client
 generate:
   - generator: javascript-client
     output: ../src/generated/prisma-client
+  - generator: graphql-schema
+    output: ../src/generated/prisma.graphql

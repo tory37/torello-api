@@ -1,3 +1,5 @@
+# import BoardSubscriptionPayload from "./generated/prisma.graphql"
+
 type Query {
   info: String!
   board(id: ID!): Board!
@@ -28,13 +30,13 @@ type Mutation {
   # deleteTask(id: ID!): ID!
 }
 
-# type Subscription {
-# #   onCreateBoard: Board!
-# #   onUpdateBoard: Board!
-# #   onDeleteBoard: ID!
+type Subscription {
+  boards: Board!
+  #   onUpdateBoard: Board!
+  #   onDeleteBoard: ID!
 
-# #   onCreateColumn: Column!
-# }
+  #   onCreateColumn: Column!
+}
 
 type Board {
   id: ID!
