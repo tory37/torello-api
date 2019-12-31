@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
-const AuthHeader = "Authorization";
-
 const getUserId = context => {
   const Authorization = context.request
     ? context.request.get("Authorization")
@@ -14,6 +12,7 @@ const getUserId = context => {
     return userId;
   }
 
+  console.log("Not authenticated");
   throw new Error("Not authenticated");
 };
 

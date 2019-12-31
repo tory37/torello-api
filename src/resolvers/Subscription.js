@@ -1,6 +1,6 @@
 const { getUserId } = require("../utils");
 
-const boards = {
+const board = {
   subscribe: async (parent, args, context) => {
     const userId = getUserId(context);
     const sub = context.prisma.$subscribe.board({
@@ -17,5 +17,5 @@ const boards = {
 };
 
 module.exports = {
-  boards
+  board
 };
