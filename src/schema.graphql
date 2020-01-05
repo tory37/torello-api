@@ -29,7 +29,7 @@ type Mutation {
 }
 
 type Subscription {
-  board: Board
+  boardSub(id: ID): Board
   #   onUpdateBoard: Board!
   #   onDeleteBoard: ID!
 
