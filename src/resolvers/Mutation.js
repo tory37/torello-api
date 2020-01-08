@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { getUserId, getTimestamp } = require("../utils");
+const { authenticateGoogle } = require("../passport");
+const lodash = require("lodash");
 
 const signup = async (parent, args, context, info) => {
   const password = await bcrypt.hash(args.password, 10);
@@ -30,6 +32,56 @@ const login = async (parent, args, context, info) => {
     token,
     user
   };
+};
+
+const authGoogle = async (parent, { token }, context) => {
+  const { req, res, prisma } = context;
+  req.body = {
+    ...req.body,
+    access_token: token
+  };
+
+  try {
+    //data contains the accessToken, refreshToken and profile from passport
+    const { data, info } = await authenticateGoogle(req, res);
+    console.log("Data: ");
+    console.log(data);
+
+    if (data) {
+      const userEmail = lodash.get(data, "profile._json.email");
+
+      const user = await prisma.user({ email: userEmail });
+
+      if (!user) {
+        const userName = lodash.get(data, "profile.name.givenName", null);
+        user = await prisma.createUser({
+          name: userName,
+          email: userEmail
+        });
+      }
+
+      if (user) {
+        return {
+          user
+        };
+      }
+
+      throw new Error("Something went wrong");
+    }
+
+    if (info) {
+      console.log(info);
+      switch (info.code) {
+        case "ETIMEDOUT":
+          return new Error("Failed to reach Google: Try Again");
+        default:
+          return new Error("something went wrong");
+      }
+    }
+    return Error("server error");
+  } catch (error) {
+    return error;
+  }
 };
 
 const createBoard = (parent, args, context, info) => {
@@ -114,6 +166,7 @@ const updateTask = (parent, args, context) => {
 module.exports = {
   signup,
   login,
+  authGoogle,
   createBoard,
   updateBoard,
   createColumn,
