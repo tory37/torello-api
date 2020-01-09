@@ -1,37 +1,17 @@
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { getUserId, getTimestamp } = require("../utils");
 const { authenticateGoogle } = require("../passport");
 const lodash = require("lodash");
 
-const signup = async (parent, args, context, info) => {
-  const password = await bcrypt.hash(args.password, 10);
-  const user = await context.prisma.createUser({ ...args, password });
-  const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-
-  return {
-    token,
-    user
-  };
-};
-
-const login = async (parent, args, context, info) => {
-  const user = await context.prisma.user({ email: args.email });
-  if (!user) {
-    throw new Error("No such user found");
-  }
-
-  const valid = await bcrypt.compare(args.password, user.password);
-  if (!valid) {
-    throw new Error("Invalid password");
-  }
-
-  const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-
-  return {
-    token,
-    user
-  };
+const createJwtToken = user => {
+  const token = jwt.sign(
+    { userId: user.id, userName: user.name },
+    process.env.APP_SECRET,
+    {
+      expiresIn: "1h"
+    }
+  );
+  return token;
 };
 
 const authGoogle = async (parent, { token }, context) => {
@@ -50,7 +30,7 @@ const authGoogle = async (parent, { token }, context) => {
     if (data) {
       const userEmail = lodash.get(data, "profile._json.email");
 
-      const user = await prisma.user({ email: userEmail });
+      let user = await prisma.user({ email: userEmail });
 
       if (!user) {
         const userName = lodash.get(data, "profile.name.givenName", null);
@@ -62,7 +42,7 @@ const authGoogle = async (parent, { token }, context) => {
 
       if (user) {
         return {
-          user
+          token: createJwtToken(user)
         };
       }
 
@@ -164,8 +144,6 @@ const updateTask = (parent, args, context) => {
 };
 
 module.exports = {
-  signup,
-  login,
   authGoogle,
   createBoard,
   updateBoard,
