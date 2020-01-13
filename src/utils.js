@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
+const lodash = require('lodash');
 
 const parseAuthHeader = (context) => {
   // let authorization = null;
@@ -12,13 +13,18 @@ const parseAuthHeader = (context) => {
   //   authorization = lodash.get(context, "connection.context.Authorization");
   // }
   // authorization = lodash.get(context, "request")
-
-  return context.req.headers.authorization;
+  let auth = lodash.get(context, 'req.headers.authorization', null);
+  if (!auth) {
+    console.log(context);
+    auth = lodash.get(context, 'req.connection.headers.authentication', null);
+  }
+  return auth;
 };
 
-const getUserId = (context) => {
+const getUserId = (context, authToken) => {
   try {
-    const Authorization = parseAuthHeader(context);
+    console.log(context);
+    const Authorization = !!authToken ? authToken : parseAuthHeader(context);
 
     if (Authorization) {
       const token = Authorization.replace('Bearer ', '');
