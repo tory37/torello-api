@@ -18,12 +18,7 @@ const resolvers = { Query, Mutation, Subscription, Board, Column, Task };
 const server = new GraphQLServer({
   typeDefs: "./src/schema.graphql",
   resolvers,
-  context: req => {
-    return {
-      ...req,
-      prisma
-    };
-  }
+  context: (req, res) => ({ req: req.request, res, prisma })
 });
 
 server.start(() => {

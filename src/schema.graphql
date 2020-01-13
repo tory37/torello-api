@@ -1,5 +1,6 @@
 type Query {
   info: String!
+  user: User!
   board(id: ID!): Board!
   boards: [Board!]!
   columns: [Column!]!
@@ -7,8 +8,7 @@ type Query {
 }
 
 type Mutation {
-  signup(email: String!, password: String!, name: String!): AuthPayload
-  login(email: String!, password: String!): AuthPayload
+  authGoogle(token: String): AuthPayload
 
   createBoard(title: String!, backgroundColor: String!): Board!
   updateBoard(id: ID!, title: String, backgroundColor: String): Board!
@@ -29,7 +29,7 @@ type Mutation {
 }
 
 type Subscription {
-  boardSub(id: ID): Board
+  boardSub(authToken: String!): Board
   #   onUpdateBoard: Board!
   #   onDeleteBoard: ID!
 
@@ -72,20 +72,10 @@ type Task {
 
 type AuthPayload {
   token: String
-  user: User
 }
 
 type User {
   id: ID!
   name: String!
   email: String!
-}
-
-enum LinkOrderByInput {
-  description_ASC
-  description_DESC
-  url_ASC
-  url_DESC
-  createdAt_ASC
-  createdAt_DESC
 }

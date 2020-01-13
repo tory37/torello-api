@@ -1,26 +1,24 @@
-const { getUserId } = require("../utils");
+const {getUserId} = require('../utils');
 
 const boardSub = {
   subscribe: async (parent, args, context) => {
-    const userId = getUserId(context);
+    console.log('Subscription established');
+    const userId = getUserId(context, args.authToken);
     const node = {
-      createdBy: { id: userId }
+      createdBy: {id: userId},
     };
 
-    if (args.id) {
-      node.id = args.id;
-    }
     const sub = context.prisma.$subscribe.board({
-      mutation_in: ["CREATED", "UPDATED"],
-      node
+      mutation_in: ['CREATED', 'UPDATED'],
+      node,
     });
     return sub.node();
   },
-  resolve: payload => {
+  resolve: (payload) => {
     return payload;
-  }
+  },
 };
 
 module.exports = {
-  boardSub
+  boardSub,
 };

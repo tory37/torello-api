@@ -1,5 +1,9 @@
 const { getUserId } = require("../utils");
 
+const user = (parent, args, context, info) => {
+  const user = context.prisma.user({ id: getUserId(context) });
+};
+
 const board = (parent, args, context, info) => {
   return context.prisma.board({ id: args.id });
 };
@@ -21,6 +25,7 @@ const columns = (parent, args, context, info) => {
 };
 
 module.exports = {
+  user,
   board,
   boards,
   columns
